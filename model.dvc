@@ -1,0 +1,10 @@
+outs:
+- hash: md5
+  path: model
+  files:
+  - relpath: encoder.pickle
+    md5: 37a341e8ecd428fce2abe0fd46925d7f
+  - relpath: model.keras
+    md5: 0a1e8b338634e04a6f90ad8bacd53f21
+  - relpath: tokenizer.pickle
+    md5: 5c691802e71c92235f2cb1f21e2e3a1c
