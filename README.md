@@ -10,7 +10,7 @@ This repository is part of the REMLA24-Team3 project and serves as the central h
 - [Model Service](https://github.com/remla24-team3/model-service)
 - [Library for Machine Learning (lib-ml)](https://github.com/remla24-team3/lib-ml)
 - [Library for Versioning (lib-version)](https://github.com/remla24-team3/lib-version)
-- [Application Frontend and Service](https://github.com/remla24-team3/app)
+- [Application Frontend and Service (app)](https://github.com/remla24-team3/app)
 
 ## Getting Started
 
@@ -58,12 +58,13 @@ Tag: https://github.com/jasperbruin/remla-ML-group3/releases/tag/a1
 
 In this phase, we achieved the following milestones:
 
+<!-- 
 - **Containerization and Orchestration**: Implemented Docker Compose to facilitate easy deployment of the application components including the app-frontend, app-service, and model-service.
 - **Operational Documentation**: Updated the `README.md` to include comprehensive documentation on system operation, configuration details, and interaction with the Docker Compose setup.
 - **Inter-service Communication**: Ensured that the app-frontend communicates only with the app-service and not directly with the model-service to adhere to architectural guidelines and prevent cross-domain request issues.
 - **Repository Management**: Established and maintained public repositories under the `remla24-team3` GitHub organization to ensure transparency and accessibility of the codebase for peer and examiner review.
 - **Continuous Integration**: Integrated GitHub Actions to automatically build and deploy services upon each commit, enhancing the robustness and reliability of the deployment pipeline.
-
+-->
 Tag:
 
 ## Contact
