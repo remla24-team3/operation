@@ -45,16 +45,26 @@ This will build and start all the services defined in the `compose.yaml`, which 
 ## Assignment Progress Log
 
 ### Assignment A1
-- Initial setup of the Docker Compose file to run the model-service, app-frontend, and app-service.
-- Creation of the initial README to document basic setup and operation instructions.
+We implemented the subtasks: 
+- Poetry package management
+- Remote data storage
+- DVC Pipeline
+- DVC Metrics
+- Pylint & Flake 8 for code quality part of Workflow
 
-### Assignment A2 (current)
-- Expanded the README to include detailed startup instructions and a comprehensive list of related repositories.
+Tag: https://github.com/jasperbruin/remla-ML-group3/releases/tag/a1
 
-## Usage Notes
+### Assignment A2
 
-- The Docker Compose file is designed to be simple to use for demonstration purposes and may not reflect the full complexity needed for scalable production deployment.
-- Future updates will include provisioning and deployment configurations using Vagrant, Ansible, Kubernetes, etc., to support more complex deployment scenarios.
+In this phase, we achieved the following milestones:
+
+- **Containerization and Orchestration**: Implemented Docker Compose to facilitate easy deployment of the application components including the app-frontend, app-service, and model-service.
+- **Operational Documentation**: Updated the `README.md` to include comprehensive documentation on system operation, configuration details, and interaction with the Docker Compose setup.
+- **Inter-service Communication**: Ensured that the app-frontend communicates only with the app-service and not directly with the model-service to adhere to architectural guidelines and prevent cross-domain request issues.
+- **Repository Management**: Established and maintained public repositories under the `remla24-team3` GitHub organization to ensure transparency and accessibility of the codebase for peer and examiner review.
+- **Continuous Integration**: Integrated GitHub Actions to automatically build and deploy services upon each commit, enhancing the robustness and reliability of the deployment pipeline.
+
+Tag:
 
 ## Contact
 
