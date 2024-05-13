@@ -57,10 +57,6 @@ Tag: https://github.com/jasperbruin/remla-ML-group3/releases/tag/a1
 
 ### Assignment A2
 
-In this phase, we achieved the following milestones:
-
-### Assignment A2
-
 Significant progress has been made across various repositories:
 
 - **Model-Training**: Enhanced the training pipeline from A1 with automated linters for code quality, integrating GitHub Actions for continuous integration.
