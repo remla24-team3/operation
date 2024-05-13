@@ -38,6 +38,8 @@ This will build and start all the services defined in the `compose.yaml`, which 
 - `app-frontend`: Frontend interface for interacting with the application.
 - `app-service`: Backend service that handles business logic and interacts with the model-service.
 
+The `app-frontend` can be viewed [locally](http://localhost:3000/).
+
 ### Configuration Files
 
 - `.dvc/config`: Configuration for data version control, pointing to a Google Drive remote for large data and model files.
