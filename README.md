@@ -1,8 +1,9 @@
-# Operation Repository
+# Operation
 
 ## Overview
 
-This repository is part of the REMLA24-Team3 project and serves as the central hub for running and operating the URL Phishing detection application. It contains Docker Compose configurations to facilitate easy deployment and operation of the application.
+This repository is part of the REMLA24-Team3 project and serves as the central hub for running and operating the URL Phishing detection application. 
+It contains Docker Compose configurations to facilitate easy deployment and operation of the application.
 
 ### Related Repositories
 
@@ -58,14 +59,18 @@ Tag: https://github.com/jasperbruin/remla-ML-group3/releases/tag/a1
 
 In this phase, we achieved the following milestones:
 
-<!-- 
-- **Containerization and Orchestration**: Implemented Docker Compose to facilitate easy deployment of the application components including the app-frontend, app-service, and model-service.
-- **Operational Documentation**: Updated the `README.md` to include comprehensive documentation on system operation, configuration details, and interaction with the Docker Compose setup.
-- **Inter-service Communication**: Ensured that the app-frontend communicates only with the app-service and not directly with the model-service to adhere to architectural guidelines and prevent cross-domain request issues.
-- **Repository Management**: Established and maintained public repositories under the `remla24-team3` GitHub organization to ensure transparency and accessibility of the codebase for peer and examiner review.
-- **Continuous Integration**: Integrated GitHub Actions to automatically build and deploy services upon each commit, enhancing the robustness and reliability of the deployment pipeline.
--->
-Tag:
+### Assignment A2
+
+Significant progress has been made across various repositories:
+
+- **Model-Training**: Enhanced the training pipeline from A1 with automated linters for code quality, integrating GitHub Actions for continuous integration.
+- **Model-Service**: Set up a Docker container to serve the ML model via a Flask API, ensuring the model can be queried independently. Implemented CI/CD pipelines for automated deployment.
+- **Lib-ML**: Extended the library to include preprocessing logic, which is used both in model-training and model-service, released via PyPi for easy dependency management.
+- **Lib-Version**: Developed a version-aware utility to manage and report versions within the app-service.
+- **App**: A Dockerized web application built with React.js for the frontend and Flask for the backend.
+- **Operation**: Established as the central repository for deployment and operation, including Docker Compose files for easy startup and README.md for detailed documentation.
+
+Tag: 
 
 ## Contact
 
