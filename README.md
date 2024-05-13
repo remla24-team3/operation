@@ -68,7 +68,7 @@ Significant progress has been made across various repositories:
 - **App**: A Dockerized web application built with React.js for the frontend and Flask for the backend.
 - **Operation**: Established as the central repository for deployment and operation, including Docker Compose files for easy startup and README.md for detailed documentation.
 
-Tag: 
+Tag: https://github.com/jasperbruin/remla-ML-group3/releases/tag/a1
 
 ## Contact
 
