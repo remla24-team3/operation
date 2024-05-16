@@ -14,45 +14,49 @@
 - hosts: controller
   become: yes
   tasks:
-    - name: Install Minikube
+    - name: Install k3s server
       shell: |
-        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_arm64.deb
-        sudo dpkg -i minikube_latest_arm64.deb
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik --write-kubeconfig-mode=644" sh -
       args:
         executable: /bin/bash
 
-    - name: Start Minikube
-      shell: minikube start --driver=docker --force
-      args:
-        executable: /bin/bash
+    - name: Get k3s node token
+      command: cat /var/lib/rancher/k3s/server/node-token
+      register: node_token
+      become: true
 
-    - name: Install kubectl
-      shell: |
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-      args:
-        executable: /bin/bash
+    - name: Save node token
+      copy:
+        content: "{{ node_token.stdout }}"
+        dest: /vagrant/k3s_node_token
 
     - name: Apply Kubernetes YAML files
       shell: |
         kubectl apply -f /vagrant/kubernetes/service.yaml
         kubectl apply -f /vagrant/kubernetes/deployment.yaml
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
-#         kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
-#         kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
+        kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
+        kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
       args:
         executable: /bin/bash
       environment:
-        KUBECONFIG: /root/.kube/config
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
 - hosts: worker
   become: yes
   tasks:
-    - name: Install k3s
+    - name: Fetch node token from controller
+      slurp:
+        src: /vagrant/k3s_node_token
+      register: token_content
+
+    - name: Save node token locally
+      copy:
+        content: "{{ token_content.content | b64decode }}"
+        dest: /tmp/k3s_node_token
+
+    - name: Install k3s agent
       shell: |
-        curl -sfL https://get.k3s.io | sh -
+        curl -sfL https://get.k3s.io | K3S_URL=https://192.168.56.2:6443 K3S_TOKEN=$(cat /tmp/k3s_node_token) sh -
       args:
         executable: /bin/bash
-
-
-
