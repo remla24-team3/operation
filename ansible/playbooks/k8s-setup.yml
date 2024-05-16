@@ -30,6 +30,34 @@
         content: "{{ node_token.stdout }}"
         dest: /vagrant/k3s_node_token
 
+    - name: Install Helm dependencies
+      shell: |
+        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+        sudo apt-get install apt-transport-https --yes
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+        sudo apt-get update
+        sudo apt-get install helm
+      args:
+        executable: /bin/bash
+
+    - name: Add Prometheus Helm repo
+      command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      args:
+        executable: /bin/bash
+
+    - name: Update Helm repos
+      command: helm repo update
+      args:
+        executable: /bin/bash
+
+    - name: Install Prometheus Operator
+      shell: helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+
     - name: Apply Kubernetes YAML files
       shell: |
         kubectl apply -f /vagrant/kubernetes/service.yaml
