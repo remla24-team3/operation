@@ -1,0 +1,85 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update apt repository and cache
+      apt:
+        update_cache: yes
+
+- hosts: controller
+  become: yes
+  tasks:
+    - name: Install k3s server
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik --write-kubeconfig-mode=644" sh -
+      args:
+        executable: /bin/bash
+
+    - name: Get k3s node token
+      command: cat /var/lib/rancher/k3s/server/node-token
+      register: node_token
+      become: true
+
+    - name: Save node token
+      copy:
+        content: "{{ node_token.stdout }}"
+        dest: /vagrant/k3s_node_token
+
+    - name: Install Helm dependencies
+      shell: |
+        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+        sudo apt-get install apt-transport-https --yes
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+        sudo apt-get update
+        sudo apt-get install helm
+      args:
+        executable: /bin/bash
+
+    - name: Add Prometheus Helm repo
+      command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      args:
+        executable: /bin/bash
+
+    - name: Update Helm repos
+      command: helm repo update
+      args:
+        executable: /bin/bash
+
+    - name: Install Prometheus Operator
+      shell: helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+
+    - name: Apply Kubernetes YAML files
+      shell: |
+        kubectl apply -f /vagrant/kubernetes/service.yaml
+        kubectl apply -f /vagrant/kubernetes/deployment.yaml
+        kubectl apply -f /vagrant/kubernetes/ingress.yaml
+        kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
+        kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+- hosts: worker
+  become: yes
+  tasks:
+    - name: Fetch node token from controller
+      slurp:
+        src: /vagrant/k3s_node_token
+      register: token_content
+
+    - name: Save node token locally
+      copy:
+        content: "{{ token_content.content | b64decode }}"
+        dest: /tmp/k3s_node_token
+
+    - name: Install k3s agent
+      shell: |
+        curl -sfL https://get.k3s.io | K3S_URL=https://192.168.56.2:6443 K3S_TOKEN=$(cat /tmp/k3s_node_token) sh -
+      args:
+        executable: /bin/bash

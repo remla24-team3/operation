@@ -27,10 +27,23 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    git clone https://github.com/remla24-team3/operation.git
    cd operation
    ```
-2. To start the application, use the following Docker Compose command:
-   ```bash
-   docker-compose up --build
-   ```
+
+### Start Vagrant and Provision VMs
+
+2. Setup SSH-key
+```bash
+vagrant ssh-config
+```
+
+3. Create and start the Vagrant VMs:
+ ```sh
+ vagrant up
+ ```
+
+ ```sh
+vagrant ssh controller
+ ```
+
 
 This will build and start all the services defined in the `compose.yaml`, which include:
 
