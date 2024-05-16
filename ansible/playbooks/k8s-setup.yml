@@ -18,7 +18,6 @@
       shell: |
         curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_arm64.deb
         sudo dpkg -i minikube_latest_arm64.deb
-
       args:
         executable: /bin/bash
 
@@ -26,6 +25,18 @@
       shell: minikube start --driver=docker --force
       args:
         executable: /bin/bash
+
+    - name: Apply Kubernetes YAML files
+      shell: |
+        kubectl apply -f /vagrant/kubernetes/deployment.yaml
+        kubectl apply -f /vagrant/kubernetes/service.yaml
+        kubectl apply -f /vagrant/kubernetes/ingress.yaml
+        kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
+        kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: /root/.kube/config
 
 - hosts: worker
   become: yes
@@ -35,3 +46,6 @@
         curl -sfL https://get.k3s.io | sh -
       args:
         executable: /bin/bash
+
+
+
