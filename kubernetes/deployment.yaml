@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: frontend
+        image: ghcr.io/remla24-team3/app:frontend
+        ports:
+        - containerPort: 3000
+      - name: service
+        image: ghcr.io/remla24-team3/app:service
+        ports:
+        - containerPort: 5000
