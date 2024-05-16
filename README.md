@@ -27,81 +27,22 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    git clone https://github.com/remla24-team3/operation.git
    cd operation
    ```
-## 1. Provisioning with Vagrant and Ansible
 
 ### Start Vagrant and Provision VMs
 
-0. Setup SSH-key
+2. Setup SSH-key
 ```bash
 vagrant ssh-config
 ```
 
-1. Create and start the Vagrant VMs:
-    ```sh
-    vagrant up
-    ```
+3. Create and start the Vagrant VMs:
+ ```sh
+ vagrant up
+ ```
 
-## 2. Build and Use Local Docker Images with Minikube
-
-### Switch to Minikube's Docker Daemon
-
-1. Evaluate Minikube's Docker environment:
-    ```sh
-    eval $(minikube -p minikube docker-env)
-    ```
-
-2. To start the application, use the following Docker Compose command:
-   ```bash
-   docker-compose up --build
-   ```
-
-## 3. Apply Kubernetes Manifests
-
-### TODO: Install Prometheus Operator
-
-### Apply Your Kubernetes Manifests
-
-1. Apply the updated service manifest:
-    ```sh
-    kubectl apply -f kubernetes/service.yaml
-    ```
-
-2. Apply the other Kubernetes manifests:
-    ```sh
-    kubectl apply -f kubernetes/deployment.yaml
-    kubectl apply -f kubernetes/ingress.yaml
-    kubectl apply -f kubernetes/servicemonitor.yaml
-    kubectl apply -f kubernetes/prometheusrule.yaml
-    ```
-
-## 4. Verify Setup
-
-### Verify that all resources are created successfully
-
-1. Get pods:
-    ```sh
-    kubectl get pods
-    ```
-
-2. Get services:
-    ```sh
-    kubectl get services
-    ```
-
-3. Get ingress:
-    ```sh
-    kubectl get ingress
-    ```
-
-4. Get ServiceMonitors:
-    ```sh
-    kubectl get servicemonitors
-    ```
-
-5. Get PrometheusRules:
-    ```sh
-    kubectl get prometheusrules
-    ```
+ ```sh
+vagrant ssh controller
+ ```
 
 
 This will build and start all the services defined in the `compose.yaml`, which include:
