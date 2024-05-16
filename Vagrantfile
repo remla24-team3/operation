@@ -15,13 +15,17 @@ Vagrant.configure("2") do |config|
 
     controller.vm.provision "ansible" do |ansible|
       ansible.compatibility_mode = "2.0"
-      ansible.playbook = "setup_controller.yml"
+      ansible.playbook = "setup_ansible.yml"
+      ansible.inventory_path = "inventory.cfg"
+      ansible.groups = {
+        "controller" => ["controller"]
+      }
     end
 
   end
 
   # node VMs
-  (1..3).each do |i|
+  (1..2).each do |i|
     config.vm.define "node#{i}" do |node|
       node.vm.box = "bento/ubuntu-24.04"
       node.vm.box_version = "202404.26.0"
@@ -33,9 +37,10 @@ Vagrant.configure("2") do |config|
 
       node.vm.provision "ansible" do |ansible|
         ansible.compatibility_mode = "2.0"
-        ansible.playbook = "setup_node.yml"
-        ansible.extra_vars = {
-          node_number: i
+        ansible.playbook = "setup_ansible.yml"
+        ansible.inventory_path = "inventory.cfg"
+        ansible.groups = {
+          "node" => ["node#{i}"]
         }
       end
     end

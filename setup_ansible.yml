@@ -1,0 +1,20 @@
+- hosts: controller
+  become: yes
+  tasks:
+    - name: Install k3s
+      shell: |
+        curl -sfL https://get.k3s.io | sh -
+    - name: Fetch node token
+      shell: cat /var/lib/rancher/k3s/server/node-token
+      register: node_token
+    - name: Set node_token
+      set_fact:
+        node_token: "{{ node_token.stdout }}"
+    - debug: var=hostvars['controller']['node_token']
+
+- hosts: node
+  become: yes
+  tasks:
+    - name: Install k3s
+      shell: |
+        curl -sfL https://get.k3s.io | K3S_URL=https://192.168.56.2:6443 K3S_TOKEN={{ hostvars['controller']['node_token'] }} sh -
