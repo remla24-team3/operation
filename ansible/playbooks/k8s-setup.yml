@@ -6,11 +6,6 @@
       apt:
         update_cache: yes
 
-    - name: Install Docker
-      apt:
-        name: docker.io
-        state: present
-
 - hosts: controller
   become: yes
   tasks:
