@@ -1,0 +1,33 @@
+- hosts: controller
+  become: yes
+  tasks:
+    - name: Install k3s
+      shell: curl -sfL https://get.k3s.io | sh -
+
+    - name: Fetch node token
+      shell: cat /var/lib/rancher/k3s/server/node-token
+      register: node_token_result
+      
+    - name: Save node token to file
+      copy:
+        content: "{{ node_token_result.stdout }}"
+        dest: /vagrant/node-token
+
+- hosts: nodes
+  become: yes
+  tasks:
+    - name: Load node token from file
+      slurp:
+        src: /vagrant/node-token
+      register: token_content
+
+    - name: Save node token locally
+      copy:
+        content: "{{ token_content.content | b64decode }}"
+        dest: /tmp/k3s_node_token
+
+    - name: Install k3s agent
+      shell: |
+        curl -sfL https://get.k3s.io | K3S_URL=https://192.168.56.2:6443 K3S_TOKEN=$(cat /tmp/k3s_node_token) sh -
+      args:
+        executable: /bin/bash
