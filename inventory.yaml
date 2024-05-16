@@ -1,0 +1,14 @@
+controllers:
+  hosts:
+    controller:
+      ansible_host: 192.168.57.2
+      ansible_user: vagrant
+
+nodes:
+  hosts:
+    node1:
+      ansible_host: 192.168.57.3
+      ansible_user: vagrant
+    node2:
+      ansible_host: 192.168.57.4
+      ansible_user: vagrant

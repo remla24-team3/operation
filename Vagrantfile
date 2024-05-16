@@ -3,6 +3,7 @@
 
 
 Vagrant.configure("2") do |config|
+
   # controller node
   config.vm.define "controller" do |controller|
     controller.vm.box = "bento/ubuntu-24.04"
@@ -16,9 +17,9 @@ Vagrant.configure("2") do |config|
     controller.vm.provision "ansible" do |ansible|
       ansible.compatibility_mode = "2.0"
       ansible.playbook = "setup_ansible.yml"
-      ansible.inventory_path = "inventory.cfg"
+      ansible.inventory_path = "inventory.yaml"
       ansible.groups = {
-        "controller" => ["controller"]
+        "controllers" => ["controller"]
       }
     end
 
@@ -38,9 +39,9 @@ Vagrant.configure("2") do |config|
       node.vm.provision "ansible" do |ansible|
         ansible.compatibility_mode = "2.0"
         ansible.playbook = "setup_ansible.yml"
-        ansible.inventory_path = "inventory.cfg"
+        ansible.inventory_path = "inventory.yaml"
         ansible.groups = {
-          "node" => ["node#{i}"]
+          "nodes" => ["node#{i}"]
         }
       end
     end
