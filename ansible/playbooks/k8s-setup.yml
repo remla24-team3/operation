@@ -1,10 +1,17 @@
----
 - hosts: all
   become: yes
   tasks:
     - name: Update apt repository and cache
       apt:
         update_cache: yes
+
+    - name: Install ntpdate
+      apt:
+        name: ntpdate
+        state: present
+
+    - name: Synchronize time
+      command: ntpdate pool.ntp.org
 
 - hosts: controller
   become: yes
