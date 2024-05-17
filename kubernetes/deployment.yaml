@@ -12,12 +12,14 @@ spec:
       labels:
         app: myapp
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: frontend
-        image: ghcr.io/remla24-team3/app:frontend
+        image: ghcr.io/remla24-team3/app-frontend:latest
         ports:
         - containerPort: 3000
       - name: service
-        image: ghcr.io/remla24-team3/app:service
+        image: ghcr.io/remla24-team3/app-service:latest
         ports:
         - containerPort: 5000

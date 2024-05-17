@@ -60,6 +60,20 @@
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
 
+    - name: Create Docker registry secret
+      shell: kubectl create secret docker-registry ghcr-secret \
+               --docker-server=ghcr.io \
+               --docker-username=$DOCKER_REGISTRY_USERNAME \
+               --docker-password=$DOCKER_REGISTRY_PASSWORD \
+               --docker-email=$DOCKER_REGISTRY_EMAIL
+      args:
+        executable: /bin/bash
+      environment:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+      ignore_errors: yes
+
+
+
     - name: Apply Kubernetes YAML files
       shell: |
         kubectl apply -f /vagrant/kubernetes/service.yaml
