@@ -1,7 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp-service-frontend
+  name: model-service
+spec:
+  selector:
+    app: myapp
+  ports:
+    - name: model-service
+      protocol: TCP
+      port: 105
+      targetPort: 105
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-frontend-service
 spec:
   selector:
     app: myapp
@@ -10,16 +24,17 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp-service
+  name: app-service
 spec:
   selector:
     app: myapp
   ports:
     - name: service
       protocol: TCP
-      port: 5000
-      targetPort: 5000
+      port: 106
+      targetPort: 106

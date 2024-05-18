@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: myapp-deployment
 spec:
   replicas: 2
   selector:
@@ -15,11 +15,44 @@ spec:
       imagePullSecrets:
       - name: ghcr-secret
       containers:
-      - name: frontend
+      - name: model-service
+        image: ghcr.io/remla24-team3/model-service:latest
+        command: ["/bin/sh", "-c", "sleep 3600"]
+        ports:
+        - containerPort: 105
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "500Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+        volumeMounts:
+        - name: model-volume
+          mountPath: /app/model
+      - name: app-frontend
         image: ghcr.io/remla24-team3/app-frontend:latest
         ports:
         - containerPort: 3000
-      - name: service
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "250m"
+            memory: "500Mi"
+      - name: app-service
         image: ghcr.io/remla24-team3/app-service:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 106
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "250m"
+            memory: "500Mi"
+      volumes:
+      - name: model-volume
+        persistentVolumeClaim:
+          claimName: model-volume-pvc

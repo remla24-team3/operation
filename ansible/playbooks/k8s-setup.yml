@@ -18,9 +18,10 @@
   tasks:
     - name: Install k3s server
       shell: |
-        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik --write-kubeconfig-mode=644" sh -
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik --write-kubeconfig-mode=644 --node-external-ip 192.168.56.2 --flannel-external-ip 192.168.56.2" sh -
       args:
         executable: /bin/bash
+
 
     - name: Get k3s node token
       command: cat /var/lib/rancher/k3s/server/node-token
@@ -59,28 +60,15 @@
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
-
-    - name: Create Docker registry secret
-      shell: kubectl create secret docker-registry ghcr-secret \
-               --docker-server=ghcr.io \
-               --docker-username=$DOCKER_REGISTRY_USERNAME \
-               --docker-password=$DOCKER_REGISTRY_PASSWORD \
-               --docker-email=$DOCKER_REGISTRY_EMAIL
-      args:
-        executable: /bin/bash
-      environment:
-        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-      ignore_errors: yes
-
-
-
     - name: Apply Kubernetes YAML files
       shell: |
         kubectl apply -f /vagrant/kubernetes/service.yaml
+        kubectl apply -f /vagrant/kubernetes/persitentvolume.yaml
         kubectl apply -f /vagrant/kubernetes/deployment.yaml
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
         kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
         kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
+
       args:
         executable: /bin/bash
       environment:

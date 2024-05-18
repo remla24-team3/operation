@@ -13,13 +13,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: myapp-service-frontend
+            name: app-frontend-service
             port:
-              number: 80
+              number: 3000
       - path: /backend
         pathType: Prefix
         backend:
           service:
-            name: myapp-service-backend
+            name: app-service
             port:
-              number: 80
+              number: 106
