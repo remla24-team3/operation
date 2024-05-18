@@ -12,8 +12,6 @@ spec:
       labels:
         app: myapp
     spec:
-      imagePullSecrets:
-      - name: ghcr-secret
       containers:
       - name: model-service
         image: ghcr.io/remla24-team3/model-service:latest
