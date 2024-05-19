@@ -11,3 +11,6 @@ spec:
     interval: 15s
   - port: service
     interval: 15s
+  - port: metrics
+    targetPort: 5001
+    interval: 15s
