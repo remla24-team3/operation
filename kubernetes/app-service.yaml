@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
       - name: app-service
-        image: ghcr.io/remla24-team3/app-service:latest
+        image: ghcr.io/remla24-team3/app-service:test
         ports:
         - containerPort: 106
         env:
         - name: MODEL_SERVICE
-          value: http://model-service:105
+          value: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/model
 
 ---
 
