@@ -20,6 +20,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: app-service
+            name: myapp-service
             port:
-              number: 106
+              number: 5000
