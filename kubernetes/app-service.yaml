@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-service
+  template:
+    metadata:
+      labels:
+        app: app-service
+    spec:
+      containers:
+      - name: app-service
+        image: ghcr.io/remla24-team3/app-service:latest
+        ports:
+        - containerPort: 106
+        env:
+        - name: MODEL_SERVICE
+          value: http://model-service:105
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  selector:
+    app: app-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 106
+      targetPort: 106
+  type: LoadBalancer

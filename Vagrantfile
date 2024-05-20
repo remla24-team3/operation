@@ -44,6 +44,7 @@ Vagrant.configure("2") do |config|
       node.vm.provision "ansible" do |ansible|
         ansible.playbook = "ansible/playbooks/k8s-setup.yml"
         ansible.inventory_path = "ansible/inventory.cfg"
+        ansible.compatibility_mode = "2.0"
         ansible.groups = {
           "worker" => ["node#{i}"]
         }
