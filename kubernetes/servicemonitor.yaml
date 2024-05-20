@@ -1,13 +1,15 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: myapp-monitor
+  name: app-service-monitor
+  labels:
+    team: backend
 spec:
   selector:
     matchLabels:
-      app: myapp
+      app: app-service
   endpoints:
   - port: http
     interval: 15s
-  - port: service
-    interval: 15s
+    path: /metrics
+    scheme: http
