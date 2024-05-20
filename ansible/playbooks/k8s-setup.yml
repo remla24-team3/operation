@@ -62,13 +62,12 @@
 
     - name: Apply Kubernetes YAML files
       shell: |
-        kubectl apply -f /vagrant/kubernetes/service.yaml
-        kubectl apply -f /vagrant/kubernetes/persitentvolume.yaml
-        kubectl apply -f /vagrant/kubernetes/deployment.yaml
+        kubectl apply -f /vagrant/kubernetes/app-frontend.yaml
+        kubectl apply -f /vagrant/kubernetes/app-service.yaml
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
+        kubectl apply -f /vagrant/kubernetes/model-service.yaml
         kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
         kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
-
       args:
         executable: /bin/bash
       environment:
