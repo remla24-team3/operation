@@ -3,21 +3,21 @@ kind: Ingress
 metadata:
   name: myapp-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
+  ingressClassName: nginx
   rules:
-  - host: myapp.local
-    http:
+  - http:
       paths:
-      - path: /frontend
-        pathType: Prefix
+      - path: /?(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
-            name: app-frontend-service
+            name: app-frontend
             port:
               number: 3000
-      - path: /backend
-        pathType: Prefix
+      - path: /backend/?(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: app-service
