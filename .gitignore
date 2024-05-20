@@ -7,3 +7,4 @@
 .idea/vcs.xml
 .idea/workspace.xml
 k3s_node_token
+secret.env
