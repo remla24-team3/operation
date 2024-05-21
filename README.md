@@ -63,6 +63,20 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    ```bash
    kubectl port-forward svc/myprom-kube-prometheus-sta-prometheus 9090:9090
    ```
+
+5. **Retrieve Admin Password**:
+    ```bash
+    kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+    ```
+
+6. **Configure Prometheus Data Source**:
+    - Go to the Grafana configuration page.
+    - Add Prometheus as a data source with URL `http://prometheus-server.monitoring.svc.cluster.local:9090`.
+
+7. **Import Grafana Dashboard**:
+    - Use the Grafana UI to import the provided JSON dashboard definition.
+    - Select the Prometheus data source and import the dashboard.
+
 ### Start Vagrant and Provision VMs
 
 2. Setup SSH-key
