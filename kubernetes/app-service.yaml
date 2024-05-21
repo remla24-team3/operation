@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: app-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: app-service
@@ -27,6 +27,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app-service
+  labels:
+    app: app-service-monitor
 spec:
   selector:
     app: app-service
@@ -36,3 +38,18 @@ spec:
       port: 106
       targetPort: 106
   type: LoadBalancer
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: app-service-monitor
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: app-service-monitor
+  endpoints:
+  - interval: 15s
