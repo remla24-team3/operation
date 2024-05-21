@@ -33,13 +33,14 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
 1. Start minikube + apply all yaml files
    ```bash
    minikube start
-   kubectl apply -f C:\\Your\\Path\\servicemonitor.yaml
-   kubectl apply -f C:\\Your\\Path\\app-frontend.yaml
-   kubectl apply -f C:\\Your\\Path\\app-service.yaml
-   kubectl apply -f C:\\Your\\Path\\model-service.yaml
-   kubectl apply -f C:\\Your\\Path\\ingress.yaml
+   kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/bundle.yaml
+   kubectl apply -f servicemonitor.yaml
+   kubectl apply -f app-frontend.yaml
+   kubectl apply -f app-service.yaml
+   kubectl apply -f model-service.yaml
+   kubectl apply -f ingress.yaml
    ```
-2. Start tunnel
+2. Start tunnel (maybe require sudo rights)
    ```bash
    minikube tunnel
    ```
@@ -47,7 +48,7 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    ```bash
    minikube addons enable ingress
    ```
-4. Test Prometheus
+4. Test Prometheus 
    ```bash
    kubectl port-forward svc/myprom-kube-prometheus-sta-prometheus 9090:9090
    ```
