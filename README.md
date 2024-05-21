@@ -118,6 +118,29 @@ Significant progress has been made across various repositories:
 
 Tag: https://github.com/remla24-team3/operation/releases/tag/a2 
 
+### Assignment A3
+
+#### Setting up (Virtual) Infrastructure
+- **Automated Configuration**: We used a loop and template arithmetic in our configuration scripts to define node names and IPs dynamically. This approach helps streamline the setup process for multiple nodes.
+- **Vagrant Compatibility**: **A note of caution: Vagrant seems to only work reliably on our Apple computers, and there might be compatibility issues on other systems.**
+
+#### Setting up Software Environment
+- **Prometheus, Grafana, and Kubernetes Dashboard**: These monitoring and management tools are now directly reachable once the environment is set up. This simplifies the monitoring and management of our Kubernetes cluster.
+
+#### Kubernetes Usage
+- **Application Deployment**: The application can now be deployed to a Kubernetes cluster. The deployment files include a Deployment, a Service, and an Ingress configuration.
+- **Ingress Controller**: The app is accessible through the Ingress controller, eliminating the need to open a node port or tunnel a service.
+- **Docker Compatibility Issues**: We encountered issues running Docker containers due to ARM vs AMD architecture differences. As a result, the correctness of our Ingress settings is still under review and will be addressed in the upcoming weeks.
+
+#### App Monitoring
+- **Basic Metrics**: The application successfully launches, but we acknowledge the need to add more detailed metrics to monitor various aspects of the application's performance.
+
+#### Grafana
+- **Dashboard Configuration**: The project includes a JSON definition for a basic Grafana dashboard. This dashboard can be imported to visualize app-specific metrics.
+- **Documentation**: The operations repository's README.md now contains instructions for manually installing the Grafana dashboard, ensuring users can set it up correctly.
+
+- Tag: https://github.com/remla24-team3/operation/releases/tag/a3
+
 ## Contact
 
 For more information or support, please open an issue in this repository or contact one of the team members directly through GitHub.
