@@ -20,6 +20,13 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: myapp-service
+            name: app-service
             port:
-              number: 5000
+              number: 106
+      - path: /model/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: model-service
+            port:
+              number: 105

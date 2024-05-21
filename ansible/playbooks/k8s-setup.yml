@@ -1,6 +1,16 @@
 - hosts: all
   become: yes
   tasks:
+    - name: Ensure systemd-timesyncd is enabled and running
+      systemd:
+        name: systemd-timesyncd
+        enabled: yes
+        state: started
+
+    - name: Wait for time synchronization to settle
+      wait_for:
+        timeout: 30
+
     - name: Update apt repository and cache
       apt:
         update_cache: yes
@@ -68,6 +78,16 @@
 - hosts: worker
   become: yes
   tasks:
+    - name: Ensure systemd-timesyncd is enabled and running
+      systemd:
+        name: systemd-timesyncd
+        enabled: yes
+        state: started
+
+    - name: Wait for time synchronization to settle
+      wait_for:
+        timeout: 30
+
     - name: Fetch node token from controller
       slurp:
         src: /vagrant/k3s_node_token

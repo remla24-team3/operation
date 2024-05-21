@@ -28,6 +28,41 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    cd operation
    ```
 
+### Local development
+
+1. Start minikube + apply all yaml files
+```bash
+   minikube stop
+   minikube delete
+   minikube start
+```
+
+1. Install helm 
+   ```bash
+   helm install monitoring prom-repo/kube-prometheus-stack -n monitoring --create-namespace
+   ```
+   
+   ```bash
+   cd kubernetes
+   kubectl apply -f servicemonitor.yaml
+   kubectl apply -f app-frontend.yaml
+   kubectl apply -f app-service.yaml
+   kubectl apply -f model-service.yaml
+   kubectl apply -f ingress.yaml
+   ```
+2. Start tunnel (maybe require sudo rights)
+   ```bash
+   sudo minikube tunnel
+   ```
+3. Enable Ingress
+   ```bash
+   minikube addons enable ingress
+   ```
+   
+4. Test Prometheus 
+   ```bash
+   kubectl port-forward svc/myprom-kube-prometheus-sta-prometheus 9090:9090
+   ```
 ### Start Vagrant and Provision VMs
 
 2. Setup SSH-key

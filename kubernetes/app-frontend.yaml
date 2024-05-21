@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: app-frontend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: app-frontend
@@ -14,9 +14,12 @@ spec:
     spec:
       containers:
       - name: app-frontend
-        image: ghcr.io/remla24-team3/app-frontend:latest
+        image: ghcr.io/remla24-team3/app-frontend:test
         ports:
         - containerPort: 3000
+        env:
+        - name: REACT_APP_SERVICE
+          value: http://localhost/backend
 
 ---
 
