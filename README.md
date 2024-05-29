@@ -155,6 +155,19 @@ Tag: https://github.com/remla24-team3/operation/releases/tag/a2
 
 - Tag: https://github.com/remla24-team3/operation/releases/tag/a3
 
+### Assignment A4
+
+#### ML Testing
+
+- **Pytest**: Add Pytest in model training
+- **Tests**: Feature and Data, Model development and Model infrastructure
+- **Tests**: Memory and Performance
+- **Tests**: Mutamorphic
+- **Tests**: Non-determinism robustness and model capabilities through data slices
+- **Frontend**:Improvements in app
+
+- Tag: https://github.com/remla24-team3/operation/releases/tag/a4
+
 ## Contact
 
 For more information or support, please open an issue in this repository or contact one of the team members directly through GitHub.
