@@ -1,0 +1,54 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress2
+  # annotations:
+  #   nginx.ingress.kubernetes.io/rewrite-target: /$2
+  #   nginx.ingress.kubernetes.io/configuration-snippet: |
+  #     rewrite ^(/dashboard)$ $1/ redirect;
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /grafana/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: prometheus-operator-grafana
+            port:
+              number: 80
+      - path: /prometheus/?(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: prometheus-operator-kube-p-prometheus
+            port:
+              number: 9090
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+  labels:
+    app.kubernetes.io/name: kubernetes-dashboard  
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/dashboard)$ $1/ redirect;
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /dashboard(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kubernetes-dashboard-kong-proxy
+            port:
+              number: 443

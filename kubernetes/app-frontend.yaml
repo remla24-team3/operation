@@ -19,7 +19,7 @@ spec:
         - containerPort: 3000
         env:
         - name: REACT_APP_SERVICE
-          value: http://localhost/backend
+          value: http://192.168.56.2/backend
 
 ---
 
