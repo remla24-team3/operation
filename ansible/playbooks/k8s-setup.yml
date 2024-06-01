@@ -37,6 +37,10 @@
         name: prometheus-community
         repo_url: https://prometheus-community.github.io/helm-charts
 
+    - name: Add Istio Helm Repo
+      kubernetes.core.helm_repository:
+        name: istio
+        repo_url: https://istio-release.storage.googleapis.com/charts
 
 
     - name: Install k3s server
@@ -84,6 +88,48 @@
         create_namespace: true
         kubeconfig: /etc/rancher/k3s/k3s.yaml
 
+    - name: Install Istio Base
+      kubernetes.core.helm:
+        name: istio-base
+        chart_ref: istio/base
+        namespace: istio-system
+        create_namespace: true
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+    
+    - name: Install Istiod
+      kubernetes.core.helm:
+        name: istiod
+        chart_ref: istio/istiod
+        namespace: istio-system
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+    
+    - name: Install Istio Ingress Gateway
+      kubernetes.core.helm:
+        name: istio-ingress
+        chart_ref: istio/gateway
+        namespace: istio-system
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+    # - name: Install Istio Base
+    #   shell: helm install istio-base istio/base -n istio-system --create-namespace
+    #   environment:
+    #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    #   become: yes
+
+    # - name: Install Istiod
+    #   shell: helm install istiod istio/istiod -n istio-system --wait
+    #   environment:
+    #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    #   become: yes
+
+
+    # - name: Install Istio Ingress Gateway
+    #   shell: helm install istio-ingress istio/gateway -n istio-system --wait
+    #   environment:
+    #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    #   become: yes
+
+
 
     
     - name: Install Prometheus Operator
@@ -114,6 +160,7 @@
         kubectl apply -f /vagrant/kubernetes/ingress2.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/service-account.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/monitoring-service.yaml -n monitoring
+        kubectl apply -f /vagrant/kubernetes/istio-config.yaml -n istio-system
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
