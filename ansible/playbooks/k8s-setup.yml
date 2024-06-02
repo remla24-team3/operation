@@ -7,10 +7,6 @@
         enabled: yes
         state: started
 
-    - name: Wait for time synchronization to settle
-      wait_for:
-        timeout: 30
-
     - name: Update apt repository and cache
       apt:
         update_cache: yes
@@ -18,49 +14,142 @@
 - hosts: controller
   become: yes
   tasks:
+    - name: Install Helm
+      shell: |
+        curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+        sudo apt-get install apt-transport-https --yes
+        echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+        sudo apt-get update
+        sudo apt-get install helm
+
+    - name: Add Nginx Ingress Helm Repo
+      kubernetes.core.helm_repository:
+        name: ingress-nginx
+        repo_url: https://kubernetes.github.io/ingress-nginx
+
+    - name: Add Kubernetes Dashboard Repo
+      kubernetes.core.helm_repository:
+        name: kubernetes-dashboard
+        repo_url: https://kubernetes.github.io/dashboard/
+
+    - name: Add Prometheus Repo
+      kubernetes.core.helm_repository:
+        name: prometheus-community
+        repo_url: https://prometheus-community.github.io/helm-charts
+
+    - name: Add Istio Helm Repo
+      kubernetes.core.helm_repository:
+        name: istio
+        repo_url: https://istio-release.storage.googleapis.com/charts
+
+
     - name: Install k3s server
       shell: |
         curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik --write-kubeconfig-mode=644 --node-external-ip 192.168.56.2 --flannel-external-ip 192.168.56.2" sh -
-      args:
-        executable: /bin/bash
-
 
     - name: Get k3s node token
       command: cat /var/lib/rancher/k3s/server/node-token
       register: node_token
-      become: true
 
     - name: Save node token
       copy:
         content: "{{ node_token.stdout }}"
         dest: /vagrant/k3s_node_token
 
-    - name: Install Helm dependencies
-      shell: |
-        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-        sudo apt-get install apt-transport-https --yes
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-        sudo apt-get update
-        sudo apt-get install helm
-      args:
-        executable: /bin/bash
 
-    - name: Add Prometheus Helm repo
-      command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-      args:
-        executable: /bin/bash
+    
+    - name: Install Nginx Ingress Controller
+      kubernetes.core.helm:
+        name: ingress-nginx
+        chart_ref: ingress-nginx/ingress-nginx
+        namespace: ingress-nginx
+        create_namespace: true
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+        values:
+          controller:
+            config:
+              allow-snippet-annotations: true
+    
 
-    - name: Update Helm repos
-      command: helm repo update
-      args:
-        executable: /bin/bash
+    # - name: Wait for Nginx Ingress Controller to be ready
+    #   command: >
+    #     kubectl wait --namespace ingress-nginx 
+    #     --for=condition=ready pod 
+    #     --selector=app.kubernetes.io/component=controller 
+    #     --timeout=120s
+    #   args:
+    #     executable: /bin/bash
 
+    - name: Install Kubernetes Dashboard
+      kubernetes.core.helm:
+        name: kubernetes-dashboard
+        chart_ref: kubernetes-dashboard/kubernetes-dashboard
+        namespace: monitoring
+        create_namespace: true
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+    - name: Install Istio Base
+      kubernetes.core.helm:
+        name: istio-base
+        chart_ref: istio/base
+        namespace: istio-system
+        create_namespace: true
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+    
+    - name: Install Istiod
+      kubernetes.core.helm:
+        name: istiod
+        chart_ref: istio/istiod
+        namespace: istio-system
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+    
+    - name: Install Istio Ingress Gateway
+      kubernetes.core.helm:
+        name: istio-ingress
+        chart_ref: istio/gateway
+        namespace: istio-system
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+    # - name: Install Istio Base
+    #   shell: helm install istio-base istio/base -n istio-system --create-namespace
+    #   environment:
+    #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    #   become: yes
+
+    # - name: Install Istiod
+    #   shell: helm install istiod istio/istiod -n istio-system --wait
+    #   environment:
+    #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    #   become: yes
+
+
+    # - name: Install Istio Ingress Gateway
+    #   shell: helm install istio-ingress istio/gateway -n istio-system --wait
+    #   environment:
+    #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    #   become: yes
+
+
+
+    
     - name: Install Prometheus Operator
-      shell: helm install prometheus-operator prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
-      args:
-        executable: /bin/bash
-      environment:
-        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+      kubernetes.core.helm:
+        name: prometheus-operator
+        chart_ref: prometheus-community/kube-prometheus-stack
+        namespace: monitoring
+        create_namespace: true
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+        values:
+          grafana:
+            grafana.ini:
+              server:
+                root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+                serve_from_sub_path: true
+          # prometheus:
+          #   prometheusSpec:
+          #     externalUrl: http://192.168.56.2/prometheus/
+              
+
 
     - name: Apply Kubernetes YAML files
       shell: |
@@ -68,26 +157,18 @@
         kubectl apply -f /vagrant/kubernetes/app-service.yaml
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
         kubectl apply -f /vagrant/kubernetes/model-service.yaml
-        kubectl apply -f /vagrant/kubernetes/prometheusrule.yaml
-        kubectl apply -f /vagrant/kubernetes/servicemonitor.yaml
-      args:
-        executable: /bin/bash
+        kubectl apply -f /vagrant/kubernetes/ingress2.yaml -n monitoring
+        kubectl apply -f /vagrant/kubernetes/service-account.yaml -n monitoring
+        kubectl apply -f /vagrant/kubernetes/monitoring-service.yaml -n monitoring
+        kubectl apply -f /vagrant/kubernetes/istio-config.yaml -n istio-system
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
-- hosts: worker
+
+
+- hosts: nodes
   become: yes
   tasks:
-    - name: Ensure systemd-timesyncd is enabled and running
-      systemd:
-        name: systemd-timesyncd
-        enabled: yes
-        state: started
-
-    - name: Wait for time synchronization to settle
-      wait_for:
-        timeout: 30
-
     - name: Fetch node token from controller
       slurp:
         src: /vagrant/k3s_node_token
