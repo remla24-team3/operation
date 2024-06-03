@@ -35,20 +35,28 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    minikube stop
    minikube delete
    minikube start
+   minikube dashboard
 ```
 
-1. Install helm 
-   ```bash
-   helm install monitoring prom-repo/kube-prometheus-stack -n monitoring --create-namespace
-   ```
+1. Install helm
    
    ```bash
-   cd kubernetes
-   kubectl apply -f servicemonitor.yaml
-   kubectl apply -f app-frontend.yaml
-   kubectl apply -f app-service.yaml
-   kubectl apply -f model-service.yaml
-   kubectl apply -f ingress.yaml
+   helm install monitoring prom-repo/kube-prometheus-stack -n monitoring --create-namespace
+   
+   helm repo add istio https://istio-release.storage.googleapis.com/charts
+   helm repo update
+   helm install istio-base istio/base -n istio-system --create-namespace
+   helm install istiod istio/istiod -n istio-system
+   helm install istio-ingress istio/gateway -n istio-system
+
+   kubectl apply -f kubernetes/app-frontend.yaml
+   kubectl apply -f kubernetes/app-service.yaml
+   kubectl apply -f kubernetes/app-service-v2.yaml
+   kubectl apply -f kubernetes/model-service.yaml
+   kubectl apply -f kubernetes/gateway.yaml
+   kubectl apply -f kubernetes/virtualservices.yaml
+   kubectl apply -f kubernetes/service-account.yaml -n monitoring
+   kubectl apply -f kubernetes/monitoring-service.yaml -n monitoring
    ```
 2. Start tunnel (maybe require sudo rights)
    ```bash
