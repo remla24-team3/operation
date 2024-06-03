@@ -7,14 +7,43 @@ spec:
   selector:
     matchLabels:
       app: app-frontend
+      version: v1
   template:
     metadata:
       labels:
         app: app-frontend
+        version: v1
     spec:
       containers:
       - name: app-frontend
         image: ghcr.io/remla24-team3/app-frontend:test
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_SERVICE
+          value: http://192.168.56.2/backend
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-frontend-experiment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-frontend
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: app-frontend
+        version: v2
+    spec:
+      containers:
+      - name: app-frontend
+        image: ghcr.io/remla24-team3/app-frontend:experiment
         ports:
         - containerPort: 3000
         env:
