@@ -13,7 +13,7 @@ spec:
     hosts:
     - "*"
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: app-frontend-virtualservice
@@ -29,8 +29,16 @@ spec:
     route:
     - destination:
         host: app-frontend
+        subset: v1
         port:
           number: 3000
+      weight: 90
+    - destination:
+        host: app-frontend
+        subset: v2
+        port:
+          number: 3000
+      weight: 10
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -50,3 +58,18 @@ spec:
         host: app-service
         port:
           number: 106
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: app-frontend
+spec:
+  host: app-frontend
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+
