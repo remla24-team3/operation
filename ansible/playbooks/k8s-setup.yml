@@ -160,7 +160,7 @@
         kubectl apply -f /vagrant/kubernetes/ingress2.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/service-account.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/monitoring-service.yaml -n monitoring
-        kubectl apply -f /vagrant/kubernetes/istio-config.yaml -n istio-system
+        kubectl apply -f /vagrant/kubernetes/istio.yaml -n istio-system
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 

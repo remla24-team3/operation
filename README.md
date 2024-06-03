@@ -174,6 +174,18 @@ Tag: https://github.com/remla24-team3/operation/releases/tag/a2
 
 - Tag: https://github.com/remla24-team3/operation/releases/tag/a4
 
+### Assignment A5
+
+#### Istio
+
+- **Istio**: Add Istio on local development, work in progress to have it working on Vagrant.
+- **Istio**: Switched from Ingress to istio Gatewway Ingress.
+- **Istio**: Added Virtual Services and Destination Rule.
+- **Experiment**: Deployed a second version of app-frontend and run Istio experiment with 90/10 rule.
+- **Vagrant**: Slight improvements in Vagrant setup.
+
+- Tag: https://github.com/remla24-team3/operation/releases/tag/a5
+
 ## Contact
 
 For more information or support, please open an issue in this repository or contact one of the team members directly through GitHub.
