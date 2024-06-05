@@ -35,53 +35,41 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    minikube stop
    minikube delete
    minikube start
+   enable minikube addons enable ingress
    minikube dashboard
 ```
+
+<!-- TODO: do we still need to enable minikube addons enable ingress?  -->
 
 1. Install helm
    
    ```bash
    helm install monitoring prom-repo/kube-prometheus-stack -n monitoring --create-namespace
-   
-   helm repo add istio https://istio-release.storage.googleapis.com/charts
-   helm repo update
    helm install istio-base istio/base -n istio-system --create-namespace
    helm install istiod istio/istiod -n istio-system
    helm install istio-ingress istio/gateway -n istio-system
 
    kubectl apply -f kubernetes/app-frontend.yaml
    kubectl apply -f kubernetes/app-service.yaml
+   kubectl apply -f kubernetes/ingress.yaml
    kubectl apply -f kubernetes/model-service.yaml
-   kubectl apply -f kubernetes/istio.yaml
+   kubectl apply -f kubernetes/ingress2.yaml -n monitoring
    kubectl apply -f kubernetes/service-account.yaml -n monitoring
    kubectl apply -f kubernetes/monitoring-service.yaml -n monitoring
+   kubectl apply -f kubernetes/prometheus.yaml
+   kubectl apply -f kubernetes/jaeger.yaml
+   kubectl apply -f kubernetes/kiali.yaml
+   kubectl apply -f kubernetes/istio.yaml -n istio-system
+   
    ```
 2. Start tunnel (maybe require sudo rights)
    ```bash
    sudo minikube tunnel
    ```
-3. Enable Ingress
-   ```bash
-   minikube addons enable ingress
-   ```
-   
-4. Test Prometheus 
-   ```bash
-   kubectl port-forward svc/myprom-kube-prometheus-sta-prometheus 9090:9090
-   ```
 
-5. **Retrieve Admin Password**:
-    ```bash
-    kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
-    ```
-
-6. **Configure Prometheus Data Source**:
-    - Go to the Grafana configuration page.
-    - Add Prometheus as a data source with URL `http://prometheus-server.monitoring.svc.cluster.local:9090`.
-
-7. **Import Grafana Dashboard**:
-    - Use the Grafana UI to import the provided JSON dashboard definition.
-    - Select the Prometheus data source and import the dashboard.
+3. ```bash
+istioctl dashboard kiali 
+```
 
 ### Start Vagrant and Provision VMs
 
