@@ -35,7 +35,7 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    minikube stop
    minikube delete
    minikube start
-   enable minikube addons enable ingress
+   minikube addons enable ingress
    minikube dashboard
 ```
 

@@ -21,60 +21,55 @@ spec:
 ---
 
 apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: myapp-virtualservice
-spec:
-  hosts:
-  - "*"
-  http:
-  - match:
-    - uri:
-        prefix: "/"
-    rewrite:
-      uri: "/"
-    route:
-    - destination:
-        host: app-frontend
-        port:
-          number: 3000
-  - match:
-    - uri:
-        prefix: "/backend/"
-    rewrite:
-      uri: "/"
-    route:
-    - destination:
-        host: app-service
-        port:
-          number: 106
-  - match:
-    - uri:
-        prefix: "/model/"
-    rewrite:
-      uri: "/"
-    route:
-    - destination:
-        host: model-service
-        port:
-          number: 105
----
-apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: myapp-destinationrule
+  name: my-destinationrule
 spec:
-  host: "*"
-  trafficPolicy:
-    loadBalancer:
-      simple: ROUND_ROBIN
+  host: 
   subsets:
-  - name: app-frontend
+  - name: version-1
     labels:
-      app: app-frontend
-  - name: app-service
+      version: v1
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN  # Load balancing algorithm
+      connectionPool:
+        http:
+          http1MaxPendingRequests: 100  # Maximum number of pending requests
+          maxRequestsPerConnection: 5  # Maximum number of requests per connection
+  - name: version-2
     labels:
-      app: app-service
-  - name: model-service
-    labels:
-      app: model-service
+      version: v2
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+      connectionPool:
+        http:
+          http1MaxPendingRequests: 100
+          maxRequestsPerConnection: 5
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: my-virtualservice
+spec:
+  hosts:
+  - my-web-app.com
+  gateways:
+  - my-gateway
+  http:
+  - route:
+    - destination:
+        host: my-web-app-service
+        subset: version-1
+        port:
+          number: 8080
+      weight: 90
+    - destination:
+        host: my-web-app-service
+        subset: version-2
+        port:
+          number: 8080
+      weight: 10
