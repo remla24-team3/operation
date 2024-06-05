@@ -35,7 +35,6 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    minikube stop
    minikube delete
    minikube start
-   minikube addons enable ingress
    minikube dashboard
 ```
 
@@ -51,14 +50,11 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
 
    kubectl apply -f kubernetes/app-frontend.yaml
    kubectl apply -f kubernetes/app-service.yaml
-   # kubectl apply -f kubernetes/ingress.yaml
    kubectl apply -f kubernetes/model-service.yaml
-   # kubectl apply -f kubernetes/ingress2.yaml -n monitoring
    kubectl apply -f kubernetes/service-account.yaml -n monitoring
-   # kubectl apply -f kubernetes/monitoring-service.yaml -n monitoring
-   kubectl apply -f kubernetes/prometheus.yaml
-   kubectl apply -f kubernetes/jaeger.yaml
-   kubectl apply -f kubernetes/kiali.yaml
+   kubectl apply -f kubernetes/prometheus.yaml -n istio-system
+   kubectl apply -f kubernetes/jaeger.yaml -n istio-system
+   kubectl apply -f kubernetes/kiali.yaml -n istio-system
    kubectl apply -f kubernetes/istio.yaml -n istio-system
    
    ```
@@ -67,8 +63,10 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    sudo minikube tunnel
    ```
 
-3. ```bash
-istioctl dashboard kiali 
+3. Test of the kiali dashboard works
+
+```bash
+   istioctl dashboard kiali 
 ```
 
 ### Start Vagrant and Provision VMs

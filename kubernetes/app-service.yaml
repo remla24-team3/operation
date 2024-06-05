@@ -28,7 +28,7 @@ kind: Service
 metadata:
   name: app-service
   labels:
-    app: app-service-monitor
+    app: app-service
 spec:
   selector:
     app: app-service
@@ -50,6 +50,6 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: app-service-monitor
+      app: app-service
   endpoints:
   - interval: 15s
