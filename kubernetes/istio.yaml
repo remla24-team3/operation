@@ -1,75 +1,79 @@
-# TODO: We need to access this through minikube tunnel
-
-# TODO: "The custom routing is not random. Repeated requests from the same origin have a stable routing" 
-# So probably we want to use the user-token here, to do the routing
-
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: my-gateway
 spec:
   selector:
-    istio: ingressgateway
+    istio: ingressgateway # use Istio default gateway implementation
   servers:
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - "*"  # Accepts requests from any host
-
+    - "*"
 ---
-
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: my-destinationrule
+  name: my-destination-rule-frontend
 spec:
-  host: 
-  subsets:
-  - name: version-1
-    labels:
-      version: v1
-    trafficPolicy:
-      loadBalancer:
-        simple: ROUND_ROBIN  # Load balancing algorithm
-      connectionPool:
-        http:
-          http1MaxPendingRequests: 100  # Maximum number of pending requests
-          maxRequestsPerConnection: 5  # Maximum number of requests per connection
-  - name: version-2
-    labels:
-      version: v2
-    trafficPolicy:
-      loadBalancer:
-        simple: ROUND_ROBIN
-      connectionPool:
-        http:
-          http1MaxPendingRequests: 100
-          maxRequestsPerConnection: 5
-
+  host: app-frontend
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
 ---
-
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: my-destination-rule-backend
+spec:
+  host: app-service
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: my-destination-rule-model
+spec:
+  host: model-service
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: my-virtualservice
+  name: my-virtual-service
 spec:
   hosts:
-  - my-web-app.com
+  - "*"  # Accepts requests from any host
   gateways:
   - my-gateway
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
     - destination:
-        host: my-web-app-service
-        subset: version-1
+        host: app-frontend
         port:
-          number: 8080
-      weight: 90
+          number: 3000
+  - match:
+    - uri:
+        prefix: "/backend"
+    route:
     - destination:
-        host: my-web-app-service
-        subset: version-2
+        host: app-service
         port:
-          number: 8080
-      weight: 10
+          number: 106
+  - match:
+    - uri:
+        prefix: "/model"
+    route:
+    - destination:
+        host: model-service
+        port:
+          number: 105
