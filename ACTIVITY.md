@@ -122,7 +122,7 @@ Worked on the report
 
 Created PR: https://github.com/remla24-team3/model-training/pull/25
 
-Approved PR: https://github.com/remla24-team3/model-training/pull/26
+Approved PR: https://github.com/remla24-team3/model-training/pull/22
 
 **-- Richard Wijers: --**
 
