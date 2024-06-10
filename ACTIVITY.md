@@ -111,3 +111,27 @@ Approved PR: https://github.com/remla24-team3/operation/pull/11
 Created PR: https://github.com/remla24-team3/operation/pull/11
 
 Approved PR: https://github.com/remla24-team3/operation/pull/10
+
+# A5:
+
+**-- Everyone --**
+
+Worked on the report
+
+**-- Alexandru Dumitriu: --**
+
+Created PR: https://github.com/remla24-team3/model-training/pull/25
+
+Approved PR: https://github.com/remla24-team3/model-training/pull/26
+
+**-- Richard Wijers: --**
+
+Created PR: https://github.com/remla24-team3/model-training/pull/26
+
+Approved PR: https://github.com/remla24-team3/model-training/pull/25
+
+**-- Jasper Bruin: --**
+
+Created PR: https://github.com/remla24-team3/model-training/pull/22
+
+Approved PR: https://github.com/remla24-team3/model-training/pull/26

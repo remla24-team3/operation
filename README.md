@@ -186,6 +186,22 @@ Tag: https://github.com/remla24-team3/operation/releases/tag/a2
 
 - Tag: https://github.com/remla24-team3/operation/releases/tag/a5
 
+### Assignment A6
+
+#### Operation
+
+- **Report**: Created 80% version of the report
+
+- Tag: https://github.com/remla24-team3/operation/releases/tag/a6
+
+#### Model-training
+
+- **Tests**: Added metric reporting to the readme
+- **Code quality** Removed unused folders and files
+
+- Tag: https://github.com/remla24-team3/model-training/releases/tag/a6
+
+
 ## Contact
 
 For more information or support, please open an issue in this repository or contact one of the team members directly through GitHub.
