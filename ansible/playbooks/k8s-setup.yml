@@ -58,17 +58,17 @@
 
 
     
-    - name: Install Nginx Ingress Controller
-      kubernetes.core.helm:
-        name: ingress-nginx
-        chart_ref: ingress-nginx/ingress-nginx
-        namespace: ingress-nginx
-        create_namespace: true
-        kubeconfig: /etc/rancher/k3s/k3s.yaml
-        values:
-          controller:
-            config:
-              allow-snippet-annotations: true
+    # - name: Install Nginx Ingress Controller
+    #   kubernetes.core.helm:
+    #     name: ingress-nginx
+    #     chart_ref: ingress-nginx/ingress-nginx
+    #     namespace: ingress-nginx
+    #     create_namespace: true
+    #     kubeconfig: /etc/rancher/k3s/k3s.yaml
+    #     values:
+    #       controller:
+    #         config:
+    #           allow-snippet-annotations: true
     
 
     # - name: Wait for Nginx Ingress Controller to be ready
@@ -105,7 +105,7 @@
     
     - name: Install Istio Ingress Gateway
       kubernetes.core.helm:
-        name: istio-ingress
+        name: istio-ingressgateway
         chart_ref: istio/gateway
         namespace: istio-system
         kubeconfig: /etc/rancher/k3s/k3s.yaml
@@ -132,22 +132,22 @@
 
 
     
-    - name: Install Prometheus Operator
-      kubernetes.core.helm:
-        name: prometheus-operator
-        chart_ref: prometheus-community/kube-prometheus-stack
-        namespace: monitoring
-        create_namespace: true
-        kubeconfig: /etc/rancher/k3s/k3s.yaml
-        values:
-          grafana:
-            grafana.ini:
-              server:
-                root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
-                serve_from_sub_path: true
-          # prometheus:
-          #   prometheusSpec:
-          #     externalUrl: http://192.168.56.2/prometheus/
+    # - name: Install Prometheus Operator
+    #   kubernetes.core.helm:
+    #     name: prometheus-operator
+    #     chart_ref: prometheus-community/kube-prometheus-stack
+    #     namespace: monitoring
+    #     create_namespace: true
+    #     kubeconfig: /etc/rancher/k3s/k3s.yaml
+    #     values:
+    #       grafana:
+    #         grafana.ini:
+    #           server:
+    #             root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+    #             serve_from_sub_path: true
+    #       # prometheus:
+    #       #   prometheusSpec:
+    #       #     externalUrl: http://192.168.56.2/prometheus/
               
 
 
@@ -155,12 +155,14 @@
       shell: |
         kubectl apply -f /vagrant/kubernetes/app-frontend.yaml
         kubectl apply -f /vagrant/kubernetes/app-service.yaml
-        kubectl apply -f /vagrant/kubernetes/ingress.yaml
         kubectl apply -f /vagrant/kubernetes/model-service.yaml
-        kubectl apply -f /vagrant/kubernetes/ingress2.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/service-account.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/monitoring-service.yaml -n monitoring
+        kubectl apply -f /vagrant/kubernetes/prometheus.yaml -n istio-system
+        kubectl apply -f /vagrant/kubernetes/jaeger.yaml -n istio-system
+        kubectl apply -f /vagrant/kubernetes/kiali.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/istio.yaml -n istio-system
+        kubectl apply -f /vagrant/kubernetes/istio-service.yaml -n istio-system
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 

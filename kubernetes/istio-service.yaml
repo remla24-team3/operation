@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kiali-dashboard
+  namespace: istio-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 20001
+      targetPort: 20001
+      nodePort: 30003
+  selector:
+    app: kiali
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-dashboard
+  namespace: istio-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 16686
+      targetPort: 16686
+      nodePort: 30004
+  selector:
+    app: jaeger
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-dashboard2
+  namespace: istio-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 9090
+      targetPort: 9090
+      nodePort: 30005
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/name: prometheus
