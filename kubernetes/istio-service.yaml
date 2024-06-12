@@ -34,6 +34,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: grafana-dashboard
+  namespace: istio-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3012
+      targetPort: 3000
+      nodePort: 30026
+  selector:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: grafana
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: prometheus-dashboard2
   namespace: istio-system
 spec:

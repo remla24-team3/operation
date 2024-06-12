@@ -159,6 +159,7 @@
         kubectl apply -f /vagrant/kubernetes/service-account.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/monitoring-service.yaml -n monitoring
         kubectl apply -f /vagrant/kubernetes/prometheus.yaml -n istio-system
+        kubectl apply -f /vagrant/kubernetes/grafana.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/jaeger.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/kiali.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/istio.yaml -n istio-system
