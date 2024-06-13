@@ -46,7 +46,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: dashboards-virtual-service
+  name: my-virtual-service
 spec:
   hosts:
   - "*"
@@ -87,25 +87,6 @@ spec:
             number: 9090
     rewrite:
       uri: /
----
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: app-virtual-service
-spec:
-  hosts:
-  - "*"
-  gateways:
-  - my-gateway
-  http:
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: app-frontend.default.svc.cluster.local
-        port:
-          number: 3000
   - match:
     - uri:
           prefix: /backend
@@ -114,6 +95,8 @@ spec:
         host: app-service.default.svc.cluster.local
         port:
           number: 106
+    rewrite:
+      uri: /
   - match:
     - uri:
         prefix: /model
@@ -122,3 +105,13 @@ spec:
           host: model-service.default.svc.cluster.local
           port:
             number: 105
+    rewrite:
+      uri: /
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: app-frontend.default.svc.cluster.local
+        port:
+          number: 3000
