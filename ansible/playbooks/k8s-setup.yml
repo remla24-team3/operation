@@ -58,17 +58,17 @@
 
 
     
-    # - name: Install Nginx Ingress Controller
-    #   kubernetes.core.helm:
-    #     name: ingress-nginx
-    #     chart_ref: ingress-nginx/ingress-nginx
-    #     namespace: ingress-nginx
-    #     create_namespace: true
-    #     kubeconfig: /etc/rancher/k3s/k3s.yaml
-    #     values:
-    #       controller:
-    #         config:
-    #           allow-snippet-annotations: true
+    - name: Install Nginx Ingress Controller
+      kubernetes.core.helm:
+        name: ingress-nginx
+        chart_ref: ingress-nginx/ingress-nginx
+        namespace: ingress-nginx
+        create_namespace: true
+        kubeconfig: /etc/rancher/k3s/k3s.yaml
+        values:
+          controller:
+            config:
+              allow-snippet-annotations: true
     
 
     # - name: Wait for Nginx Ingress Controller to be ready
@@ -153,6 +153,7 @@
 
     - name: Apply Kubernetes YAML files
       shell: |
+        kubectl label namespace default istio-injection=enabled --overwrite
         kubectl apply -f /vagrant/kubernetes/app-frontend.yaml
         kubectl apply -f /vagrant/kubernetes/app-service.yaml
         kubectl apply -f /vagrant/kubernetes/model-service.yaml
@@ -164,6 +165,7 @@
         kubectl apply -f /vagrant/kubernetes/kiali.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/istio.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/istio-service.yaml -n istio-system
+        kubectl apply -f /vagrant/kubernetes/ingress3.yaml -n istio-system
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
