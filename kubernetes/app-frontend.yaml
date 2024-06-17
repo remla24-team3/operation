@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: app-frontend
-        image: ghcr.io/remla24-team3/app-frontend:test
+        image: ghcr.io/remla24-team3/app-frontend:latest
         ports:
         - containerPort: 3000
         env:

@@ -17,6 +17,14 @@ spec:
         image: ghcr.io/remla24-team3/model-service:latest
         ports:
         - containerPort: 105
+        volumeMounts:
+        - name: model-volume
+          mountPath: /app/model
+      volumes:
+      - name: model-volume
+        hostPath:
+          path: /vagrant/model
+          type: Directory
 
 ---
 
