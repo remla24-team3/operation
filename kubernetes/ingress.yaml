@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myapp-ingress
+  namespace: istio-system
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
@@ -9,24 +10,34 @@ spec:
   rules:
   - http:
       paths:
-      - path: /?(.*)
+      - path: /((?!dashboard|assets).*)$
         pathType: ImplementationSpecific
         backend:
           service:
-            name: app-frontend
+            name: istio-ingressgateway
             port:
-              number: 3000
-      - path: /backend/?(.*)
+              number: 80
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /dashboard?(.*)
         pathType: ImplementationSpecific
         backend:
           service:
-            name: app-service
+            name: kubernetes-dashboard
             port:
-              number: 106
-      - path: /model/?(.*)
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: model-service
-            port:
-              number: 105
+              number: 8100

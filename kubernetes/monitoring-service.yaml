@@ -11,19 +11,3 @@ spec:
       nodePort: 30001
   selector:
     app: kubernetes-dashboard-kong
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus-dashboard
-  namespace: monitoring
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 8200
-      targetPort: 9090
-      nodePort: 30002
-  selector:
-    app.kubernetes.io/name: prometheus
