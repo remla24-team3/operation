@@ -51,6 +51,11 @@ data:
       static_configs:
       - targets:
         - localhost:9090
+    # TODO: this ip 10.43.192.228 is the IP of the service app-service, need to double check if this is correct.
+    - job_name: 'backend'
+      static_configs:
+        - targets: ['10.43.192.228:106']
+      metrics_path: '/metrics'
     - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       job_name: kubernetes-apiservers
       kubernetes_sd_configs:
