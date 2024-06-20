@@ -26,7 +26,6 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "This query gives you the current number of active sessions.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -87,7 +86,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -107,14 +106,14 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "active_sessions",
+          "expr": "sum(rate(request_duration_seconds_bucket[5m])) by (le, method, endpoint)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Active Sessions",
+      "title": "Request Duration",
       "type": "timeseries"
     },
     {
@@ -203,7 +202,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "rate(prediction_requests_total[1m])",
+          "expr": "sum by (model) (rate(prediction_requests_total[1m]))\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -218,7 +217,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "This query calculates the rate of HTTP requests per second over the last minute.",
+      "description": "This query gives you the current number of active sessions.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -279,7 +278,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 2,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
@@ -299,14 +298,14 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "rate(http_requests_total[1m])",
+          "expr": "sum by (region) (active_sessions)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "HTTP Requests Rate",
+      "title": "Active Sessions",
       "type": "timeseries"
     },
     {
@@ -395,7 +394,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "http_requests_total",
+          "expr": "sum by (method, endpoint) (http_requests_total)\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -403,6 +402,102 @@
         }
       ],
       "title": "Total HTTP Requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "This query calculates the rate of HTTP requests per second over the last minute.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by (method, endpoint) (rate(http_requests_total[1m]))\n",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Requests Rate",
       "type": "timeseries"
     },
     {
@@ -468,7 +563,7 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
+        "x": 12,
         "y": 16
       },
       "id": 5,
@@ -515,6 +610,6 @@
   "timezone": "browser",
   "title": "app-service-monitoring",
   "uid": "ddpcbndybw7b4c",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
