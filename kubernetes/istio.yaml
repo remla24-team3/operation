@@ -29,6 +29,13 @@ metadata:
   name: my-destination-rule-backend
 spec:
   host: app-service.default.svc.cluster.local
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+    - name: v2
+      labels:
+        version: v2
   trafficPolicy:
     loadBalancer:
       simple: ROUND_ROBIN
@@ -49,69 +56,88 @@ metadata:
   name: my-virtual-service
 spec:
   hosts:
-  - "*"
+    - "*"
   gateways:
-  - my-gateway
+    - my-gateway
   http:
-  - match:
-    - uri:
-        prefix: /kiali
-    route:
-    - destination:
-        host: kiali-dashboard
-        port:
-          number: 20001
-  - match:
-    - uri:
-          prefix: /jaeger
-    route:
-    - destination:
-        host: jaeger-dashboard
-        port:
-          number: 16686
-  - match:
-    - uri:
-          prefix: /grafana
-    route:
-    - destination:
-        host: grafana
-        port:
-          number: 3000
-  - match:
-    - uri:
-        prefix: /prometheus/
-    route:
-      - destination:
-          host: prometheus
-          port:
-            number: 9090
-    rewrite:
-      uri: /
-  - match:
-    - uri:
-          prefix: /backend
-    route:
-    - destination:
-        host: app-service.default.svc.cluster.local
-        port:
-          number: 106
-    rewrite:
-      uri: /
-  - match:
-    - uri:
-        prefix: /model
-    route:
-      - destination:
-          host: model-service.default.svc.cluster.local
-          port:
-            number: 105
-    rewrite:
-      uri: /
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: app-frontend.default.svc.cluster.local
-        port:
-          number: 3000
+    - match:
+        - uri:
+            prefix: /kiali
+      route:
+        - destination:
+            host: kiali-dashboard
+            port:
+              number: 20001
+    - match:
+        - uri:
+            prefix: /jaeger
+      route:
+        - destination:
+            host: jaeger-dashboard
+            port:
+              number: 16686
+    - match:
+        - uri:
+            prefix: /grafana
+      route:
+        - destination:
+            host: grafana
+            port:
+              number: 3000
+    - match:
+        - uri:
+            prefix: /prometheus/
+      route:
+        - destination:
+            host: prometheus
+            port:
+              number: 9090
+      rewrite:
+        uri: /
+    - match:
+        - uri:
+            prefix: /backend
+      route:
+        - destination:
+            host: app-service.default.svc.cluster.local
+            subset: v1
+            port:
+              number: 106
+      rewrite:
+        uri: /
+    - match:
+        - uri:
+            prefix: /model
+      route:
+        - destination:
+            host: model-service.default.svc.cluster.local
+            port:
+              number: 105
+      rewrite:
+        uri: /
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: app-frontend.default.svc.cluster.local
+            port:
+              number: 3000
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: app-service
+spec:
+  hosts:
+    - app-service.default.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: app-service.default.svc.cluster.local
+            subset: v1
+          weight: 90
+        - destination:
+            host: app-service.default.svc.cluster.local
+            subset: v2
+          weight: 10

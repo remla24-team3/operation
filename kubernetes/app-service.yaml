@@ -1,25 +1,63 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-service
+  name: app-service-v1
+  labels:
+    app: app-service
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: app-service
+      version: v1
   template:
     metadata:
       labels:
         app: app-service
+        version: v1
     spec:
       containers:
       - name: app-service
-        image: ghcr.io/remla24-team3/app-service:test
+        image: ghcr.io/remla24-team3/app-service:v1
         ports:
         - containerPort: 106
         env:
         - name: MODEL_SERVICE
           value: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/model
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-service-v2
+  labels:
+    app: app-service
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-service
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: app-service
+        version: v2
+    spec:
+      containers:
+      - name: app-service
+        image: ghcr.io/remla24-team3/app-service:v2
+        ports:
+        - containerPort: 106
+        env:
+        - name: MODEL_SERVICE
+          value: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/model
+
+
 
 ---
 
@@ -40,6 +78,8 @@ spec:
   type: LoadBalancer
 
 ---
+
+
 
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
