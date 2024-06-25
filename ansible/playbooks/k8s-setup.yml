@@ -114,6 +114,9 @@
     - name: Apply Kubernetes YAML files
       shell: |
         kubectl label namespace default istio-injection=enabled --overwrite
+        kubectl create namespace rate-limit
+        kubectl label namespace rate-limit istio-injection=enabled
+        
         kubectl apply -f /vagrant/kubernetes/app-frontend.yaml
         kubectl apply -f /vagrant/kubernetes/app-service.yaml
         kubectl apply -f /vagrant/kubernetes/model-service.yaml
@@ -126,6 +129,9 @@
         kubectl apply -f /vagrant/kubernetes/istio.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/istio-service.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
+        
+        kubectl apply -f /vagrant/kubernetes/http-bin.yaml 
+        kubectl apply -f /vagrant/kubernetes/rate-limit.yaml -n rate-limit
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
