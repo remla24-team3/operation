@@ -8,3 +8,5 @@
 .idea/workspace.xml
 k3s_node_token
 secret.env
+.idea/modules.xml
+.idea/operation.iml

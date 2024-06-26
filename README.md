@@ -17,8 +17,7 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
 
 ### Prerequisites
 
-- Docker and Docker Compose installed on your machine.
-- Access to the internet to pull container images and dependencies.
+TODO
 
 ### Running the Application
 
@@ -28,63 +27,29 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
    cd operation
    ```
 
-### Local development
+### Download our model using DVC
 
-1. Start minikube + apply all yaml files
-```bash
-   minikube stop
-   minikube delete
-   minikube start
-   minikube dashboard
-```
-
-<!-- TODO: do we still need to enable minikube addons enable ingress?  -->
-
-1. Install helm
-   
+1. Install DVC
    ```bash
-   helm install monitoring prom-repo/kube-prometheus-stack -n monitoring --create-namespace
-   helm install istio-base istio/base -n istio-system --create-namespace
-   helm install istiod istio/istiod -n istio-system
-   helm install istio-ingress istio/gateway -n istio-system
-
-   kubectl apply -f kubernetes/app-frontend.yaml
-   kubectl apply -f kubernetes/app-service.yaml
-   kubectl apply -f kubernetes/model-service.yaml
-   kubectl apply -f kubernetes/service-account.yaml -n monitoring
-   kubectl apply -f kubernetes/prometheus.yaml -n istio-system
-   kubectl apply -f kubernetes/jaeger.yaml -n istio-system
-   kubectl apply -f kubernetes/kiali.yaml -n istio-system
-   kubectl apply -f kubernetes/istio.yaml -n istio-system
+   pipx install dvc
+   ```
    
-   ```
-2. Start tunnel (maybe require sudo rights)
+2. Pull the model and data from the remote storage
    ```bash
-   sudo minikube tunnel
-   ```
-
-3. Test of the kiali dashboard works
-
-```bash
-   istioctl dashboard kiali 
-```
+    dvc pull
+    ```
 
 ### Start Vagrant and Provision VMs
 
-2. Setup SSH-key
-```bash
-vagrant ssh-config
-```
-
-3. Create and start the Vagrant VMs:
+1. Create and start the Vagrant VMs:
  ```sh
- vagrant up
+ vagrant destroy -f && vagrant up
  ```
 
+2. Launch the vagrant controller if necessary.
  ```sh
 vagrant ssh controller
  ```
-
 
 This will build and start all the services defined in the `compose.yaml`, which include:
 
@@ -92,7 +57,13 @@ This will build and start all the services defined in the `compose.yaml`, which 
 - `app-frontend`: Frontend interface for interacting with the application.
 - `app-service`: Backend service that handles business logic and interacts with the model-service.
 
-The `app-frontend` can be viewed [locally](http://localhost:3000/).
+The `app-frontend` can be viewed [application](http://192.168.56.2)
+
+The `grafana-dashboard` can be accessed at [grafana](http://192.168.56.2/grafana)
+
+The `kubernetes` can be accessed at [kubernetes](http://192.168.56.2/dashboard)
+
+The `prometheus` can be accessed at [prometheus](http://192.168.56.2/prometheus/)
 
 ### Configuration Files
 
