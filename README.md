@@ -17,7 +17,8 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
 
 ### Prerequisites
 
-TODO
+- Vagrant
+- Data Version Control (DVC)
 
 ### Running the Application
 
