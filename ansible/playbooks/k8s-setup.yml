@@ -128,14 +128,13 @@
         kubectl apply -f /vagrant/kubernetes/istio-service.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
         
-#        kubectl apply -f /vagrant/kubernetes/rate-limit/config-map.yaml -n istio-system
-#        kubectl apply -f /vagrant/kubernetes/rate-limit/envoy-filter.yaml -n istio-system
-#        kubectl apply -f /vagrant/kubernetes/rate-limit/envoy-filter-config.yaml -n istio-system
+        kubectl create namespace rate-limit
+        kubectl label namespace rate-limit istio-injection=enabled
+        kubectl apply -f /vagrant/kubernetes/rate-limit/rate-limit.yaml -n rate-limit
+
 
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-
-
 
 - hosts: nodes
   become: yes
