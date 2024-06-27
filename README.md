@@ -31,27 +31,27 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
 ### Download our model using DVC
 
 1. Install DVC
-   ```bash
-   pipx install dvc 
-   ```
+```bash
+pipx install dvc 
+```
    
 or 
 
-   ```bash
-   pip install dvc
-   ```
+```bash
+pip install dvc
+```
    
 2. Pull the model and data from the remote storage
-   ```bash
-    dvc pull
-    ```
+```bash
+ dvc pull
+ ```
 
 ### Start Vagrant and Provision VMs
 
 1. Create and start the Vagrant VMs:
- ```sh
- vagrant destroy -f && vagrant up
- ```
+```sh
+vagrant destroy -f && vagrant up
+```
 
 2. Launch the vagrant controller if necessary.
  ```sh
