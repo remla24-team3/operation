@@ -148,7 +148,7 @@ Tag: https://github.com/remla24-team3/operation/releases/tag/a2
    To execute the commands, first, you need to open a shell session inside your `sleep` pod where you will run the curl requests. Use the following command to access the shell:
 
    ```bash
-   kubectl exec -it sleep-0 -n rl -- sh
+   kubectl exec -it sleep-0 -n rate-limit -- sh
    ```
 
 2. **Execute the HTTP Requests**:
