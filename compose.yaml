@@ -1,20 +1,17 @@
 services:
   model-service:
-    build:
-      https://github.com/remla24-team3/model-service.git
+    image: ghcr.io/remla24-team3/model-service:latest
     volumes:
       - ./model:/app/model
     ports:
       - 105:105
 
   app-frontend:
-    build:
-      https://github.com/remla24-team3/app.git#:frontend
+    image: ghcr.io/remla24-team3/app-frontend:latest
     ports:
       - 3000:3000
 
   app-service:
-    build:
-      https://github.com/remla24-team3/app.git#:service
+    image: ghcr.io/remla24-team3/app-service:latest
     ports:
       - 106:106
