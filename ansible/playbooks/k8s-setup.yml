@@ -128,8 +128,8 @@
         kubectl apply -f /vagrant/kubernetes/istio-service.yaml -n istio-system
         kubectl apply -f /vagrant/kubernetes/ingress.yaml
         
-        kubectl create namespace rl
-        kubectl label namespace rl istio-injection=enabled
+        kubectl create namespace rate-limit
+        kubectl label namespace rate-limit istio-injection=enabled
         kubectl apply -f /vagrant/kubernetes/rate-limit/rate-limit.yaml -n rate-limit
 
 

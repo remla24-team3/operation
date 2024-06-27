@@ -141,6 +141,31 @@ Tag: https://github.com/remla24-team3/operation/releases/tag/a2
 - **Experiment**: Deployed a second version of app-frontend and run Istio experiment with 90/10 rule.
 - **Vagrant**: Slight improvements in Vagrant setup.
 
+
+## Istio Use Case: Rate Limiting
+
+1. **Open a Shell in the Pod**:
+   To execute the commands, first, you need to open a shell session inside your `sleep` pod where you will run the curl requests. Use the following command to access the shell:
+
+   ```bash
+   kubectl exec -it sleep-0 -n rl -- sh
+   ```
+
+2. **Execute the HTTP Requests**:
+   Once inside the shell of the `sleep` pod, run the following loop to execute 15 HTTP GET requests to the `echoserver`. This step is crucial to test the rate limiting functionality. Each request will output the HTTP status code, helping you identify when rate limiting kicks in (typically indicated by `429 Too Many Requests`).
+
+   ```bash
+   for i in $(seq 1 15); do
+     curl -s -o /dev/null -w "%{http_code}\n" http://echoserver.rl.svc.cluster.local
+   done
+   ```
+
+   This command will output the HTTP status code for each request, allowing you to verify whether and when the rate limiting rules apply.
+
+#### Analyzing the Results
+- **HTTP 200**: Indicates a successful response from the `echoserver`.
+- **HTTP 429**: Indicates that the rate limiting has been enforced.
+
 - Tag: https://github.com/remla24-team3/operation/releases/tag/a5
 
 ## Contact
