@@ -130,18 +130,11 @@
         
         kubectl create namespace rl
         kubectl label namespace rl istio-injection=enabled
-        
-        kubectl apply -f /vagrant/kubernetes/rate-limit/httpbin-statefulset.yaml
-        kubectl apply -f /vagrant/kubernetes/rate-limit/sleep-statefulset.yaml
-        kubectl apply -f /vagrant/kubernetes/rate-limit/httpbin-service.yaml
-        kubectl apply -f /vagrant/kubernetes/rate-limit/sleep-service.yaml
+        kubectl apply -f /vagrant/kubernetes/rate-limit/rate-limit.yaml -n rl
 
-        kubectl apply -f /vagrant/kubernetes/rate-limit/httpbin-ratelimit-simple.yaml -n rl
 
       environment:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-
-
 
 - hosts: nodes
   become: yes
