@@ -7,13 +7,13 @@ Vagrant.configure("2") do |config|
     controller.vm.network "private_network", ip: "192.168.56.2"
     
     controller.vm.provider "virtualbox" do |vb|
-      vb.memory = "4144"
-      vb.cpus = 2
+      vb.memory = "8144"
+      vb.cpus = 4
     end
 
     config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "6144"
-      v.vmx["numvcpus"] = "2"
+      v.vmx["memsize"] = "8144"
+      v.vmx["numvcpus"] = "4"
     end
 
     controller.vm.provision "ansible" do |ansible|
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
       end
 
       config.vm.provider "vmware_fusion" do |v|
-        v.vmx["memsize"] = "6144"
+        v.vmx["memsize"] = "4144"
         v.vmx["numvcpus"] = "2"
       end
 

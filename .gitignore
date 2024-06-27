@@ -7,6 +7,7 @@
 .idea/vcs.xml
 .idea/workspace.xml
 k3s_node_token
+k3s.yaml
 secret.env
 .idea/modules.xml
 .idea/operation.iml

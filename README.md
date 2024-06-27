@@ -68,9 +68,19 @@ The `app-frontend` can be viewed [application](http://192.168.56.2)
 
 The `grafana-dashboard` can be accessed at [grafana](http://192.168.56.2/grafana)
 
-The `kubernetes` can be accessed at [kubernetes](http://192.168.56.2/dashboard)
+The `kubernetes` can be accessed at [kubernetes](https://192.168.56.2/dashboard)
 
 The `prometheus` can be accessed at [prometheus](http://192.168.56.2/prometheus/)
+
+The `kiali` can be accessed at [kiali](http://192.168.56.2/kiali)
+
+The `jaeger` can be accessed at [jaeger](http://192.168.56.2/jaeger)
+
+### Access Kubernetes using kubectl
+
+After provisioning, the kubernetes configuration file `k3s.yaml` will have been generated. 
+This file can be used to access the cluster using
+`kubectl [command] --kubeconfig ./k3s.yaml`
 
 ### Configuration Files
 
