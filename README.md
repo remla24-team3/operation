@@ -32,7 +32,13 @@ It contains Docker Compose configurations to facilitate easy deployment and oper
 
 1. Install DVC
    ```bash
-   pipx install dvc
+   pipx install dvc 
+   ```
+   
+or 
+
+   ```bash
+   pip install dvc
    ```
    
 2. Pull the model and data from the remote storage
