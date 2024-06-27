@@ -47,15 +47,23 @@
       shell: |
         curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable traefik --write-kubeconfig-mode=644 --node-external-ip 192.168.56.2 --flannel-external-ip 192.168.56.2" sh -
 
+
     - name: Get k3s node token
       command: cat /var/lib/rancher/k3s/server/node-token
       register: node_token
+
 
     - name: Save node token
       copy:
         content: "{{ node_token.stdout }}"
         dest: /vagrant/k3s_node_token
+    
 
+    - name: Copy kubeconfig to /vagrant/k3s.yaml
+      copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: /vagrant/k3s.yaml
+        remote_src: true
 
     
     - name: Install Nginx Ingress Controller
