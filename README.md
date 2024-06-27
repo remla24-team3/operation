@@ -156,7 +156,7 @@ Tag: https://github.com/remla24-team3/operation/releases/tag/a2
 
    ```bash
    for i in $(seq 1 15); do
-     curl -s -o /dev/null -w "%{http_code}\n" http://echoserver.rl.svc.cluster.local
+     curl -s -o /dev/null -w "%{http_code}\n" http://echoserver.rate-limit.svc.cluster.local
    done
    ```
 
