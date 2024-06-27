@@ -10,8 +10,12 @@ services:
     image: ghcr.io/remla24-team3/app-frontend:latest
     ports:
       - 3000:3000
+    environment:
+      - REACT_APP_SERVICE=http://127.0.0.1:106
 
   app-service:
     image: ghcr.io/remla24-team3/app-service:latest
     ports:
       - 106:106
+    environment:
+      - MODEL_SERVICE=http://model-service:105
